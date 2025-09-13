@@ -45,7 +45,7 @@ Eta is a lightweight and blazing fast embedded JS templating engine that works i
   - Better quotes/comments support
     - _ex._ `<%= someval + "string %>" %>` compiles correctly, while it fails with doT or EJS
   - Great error reporting
-- ⚡️ Exports ES Modules as well as UMD
+- ⚡️ Exports ES Modules
 - 📝 Easy template syntax
 
 ## Get Started

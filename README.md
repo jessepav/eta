@@ -7,7 +7,6 @@
 <p align="center">
   <a href="https://eta.js.org">Documentation</a> -
   <a href="https://discord.gg/27gGncJYE2">Chat</a> -
-  <a href="https://runkit.com/nebrelbug/eta-v3">RunKit Demo</a> -
   <a href="https://eta.js.org/playground">Playground</a>
 </p>
 
@@ -22,7 +21,7 @@
 
 <span align="center">
 
-**You're viewing the source for Eta v3, which we just released! For v2, visit [the old branch](https://github.com/bgub/eta/tree/v2).**
+**You're viewing the source for Eta v4 (beta)**
 
 </span>
 

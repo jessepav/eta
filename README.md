@@ -68,7 +68,7 @@ Then, in your JS file:
 
 ```js
 import { Eta } from "eta";
-// import { Eta } from "https://deno.land/x/eta@v3.1.0/src/index.ts";
+// or use https://jsr.io/@bgub/eta
 
 const eta = new Eta({ views: path.join(__dirname, "templates") });
 
@@ -171,4 +171,4 @@ Made with ❤️ by [bgub](https://github.com/bgub) and [many wonderful contribu
 ## Credits
 
 - Async support, file handling, and error formatting were based on code from [EJS](https://github.com/mde/ejs), which is licensed under the Apache-2.0 license. Code was modified and refactored to some extent.
-- Syntax and some parts of compilation are heavily based off EJS, Nunjucks, and doT.
+- Syntax and some parts of compilahttps://jsr.io/@bgub/etation are heavily based off EJS, Nunjucks, and doT.

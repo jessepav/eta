@@ -14,3 +14,13 @@ dist
 
 package-lock.json
 yarn.lock
+
+tags
+*.tags
+
+gtags.files
+GPATH
+GRTAGS
+GTAGS
+
+src/*.d.ts

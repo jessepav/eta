@@ -2,6 +2,7 @@ import { readFile, resolvePath } from "./file-handling.ts";
 import { Eta as EtaCore } from "./internal.ts";
 
 export type { EtaConfig, Options } from "./config.ts";
+export type { TemplateFunction } from "./compile.ts";
 export {
   EtaError,
   EtaFileResolutionError,

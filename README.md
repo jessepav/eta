@@ -180,4 +180,4 @@ Made with ❤️ by [bgub](https://github.com/bgub) and [many wonderful contribu
 ## Credits
 
 - Async support, file handling, and error formatting were based on code from [EJS](https://github.com/mde/ejs), which is licensed under the Apache-2.0 license. Code was modified and refactored to some extent.
-- Syntax and some parts of compilahttps://jsr.io/@bgub/etation are heavily based off EJS, Nunjucks, and doT.
+- Syntax and some parts of compilation are heavily based off EJS, Nunjucks, and doT.

@@ -93,7 +93,7 @@ const defaultConfig: EtaConfig = {
   escapeFunction: XMLEscape,
   // default filter function (not used unless enables) just stringifies the input
   filterFunction: (val) => String(val),
-  outputFunctionName: 'output',
+  outputFunctionName: "output",
   functionHeader: "",
   parse: {
     exec: "",

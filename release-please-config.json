@@ -7,8 +7,7 @@
       "package-name": "eta",
       "extra-files": ["jsr.json"],
       "prerelease-type": "alpha",
-      "include-component-in-tag": false,
-      "include-v-in-tag": true
+      "include-component-in-tag": false
     }
   }
 }

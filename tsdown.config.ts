@@ -10,10 +10,6 @@ export default defineConfig([
   },
   {
     entry: ["./src/core.ts"],
-    format: ["umd"],
-    outputOptions: {
-      name: "eta",
-    },
     platform: "browser",
     dts: true,
     minify: true,

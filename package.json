@@ -24,8 +24,8 @@
       "require": "./dist/index.cjs"
     },
     "./core": {
-      "import": "./dist/core.umd.js",
-      "require": "./dist/core.umd.js"
+      "import": "./dist/core.js",
+      "types": "./dist/core.d.ts"
     },
     "./package.json": "./package.json"
   },
@@ -57,7 +57,7 @@
   },
   "size-limit": [
     {
-      "path": "dist/core.umd.js",
+      "path": "dist/core.js",
       "limit": "3.5 KB"
     }
   ],

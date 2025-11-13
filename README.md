@@ -21,7 +21,7 @@
 
 <span align="center">
 
-**You're viewing the source for Eta v4 (ESM-only)**
+**You're viewing the source for Eta v4**
 
 </span>
 

@@ -61,7 +61,7 @@ export interface EtaConfig {
     processTemplate?: (fnString: string, env?: EtaConfig) => string;
   }>;
 
-  /** Remove all safe-to-remove whitespace */
+  /** Remove empty lines and whitespace between lines */
   rmWhitespace: boolean;
 
   /** Delimiters: by default `['<%', '%>']` */
@@ -93,7 +93,7 @@ const defaultConfig: EtaConfig = {
   escapeFunction: XMLEscape,
   // default filter function (not used unless enables) just stringifies the input
   filterFunction: (val) => String(val),
-  outputFunctionName: 'output',
+  outputFunctionName: "output",
   functionHeader: "",
   parse: {
     exec: "",

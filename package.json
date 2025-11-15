@@ -1,6 +1,6 @@
 {
   "name": "eta",
-  "version": "4.0.1",
+  "version": "4.4.1",
   "description": "Lightweight, fast, and powerful embedded JS template engine",
   "keywords": [
     "handlebars",
@@ -16,22 +16,29 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./index.d.ts"
+      "types": {
+        "import": "./dist/index.d.mts",
+        "require": "./dist/index.d.cts"
+      },
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
     },
     "./core": {
       "import": "./dist/core.js",
       "types": "./dist/core.d.ts"
-    }
+    },
+    "./package.json": "./package.json"
   },
-  "types": "./dist/index.d.ts",
-  "browser": "./dist/core.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "sideEffects": false,
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "tsdown",
+    "prepare": "npm run build",
     "dev": "tsdown --watch",
     "lint": "biome check --error-on-warnings",
     "format": "biome format --write",
@@ -55,13 +62,13 @@
     }
   ],
   "devDependencies": {
-    "@biomejs/biome": "2.2.3",
-    "@size-limit/preset-small-lib": "^8.2.4",
-    "@types/node": "^22.18.1",
-    "@vitest/coverage-istanbul": "3.2.4",
-    "size-limit": "^8.2.4",
-    "tsdown": "^0.15.0",
-    "typescript": "^5.9.2",
-    "vitest": "^3.2.4"
+    "@biomejs/biome": "2.3.5",
+    "@size-limit/preset-small-lib": "^11.2.0",
+    "@types/node": "^24.10.1",
+    "@vitest/coverage-istanbul": "4.0.8",
+    "size-limit": "^11.2.0",
+    "tsdown": "^0.16.4",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.8"
   }
 }

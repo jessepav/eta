@@ -21,13 +21,15 @@
 
 <span align="center">
 
-**You're viewing the source for Eta v4 (ESM-only)**
+**You're viewing the source for Eta v4**
 
 </span>
 
 ## Summary
 
 Eta is a lightweight and blazing fast embedded JS templating engine that works inside Node, Deno, and the browser. It's written in TypeScript and emphasizes great performance, configurability, and small bundle size.
+
+> 🎯 **Built with [ts-base](https://github.com/bgub/ts-base)** — A TypeScript library starter template featuring Biome, Vitest, tsdown, and automated releases. Check out ts-base for a modern TypeScript project setup!
 
 ### 🌟 Features
 
@@ -153,6 +155,15 @@ To render Eta templates in [Koa](https://koajs.com) web framework: [@cedx/koa-et
 
 </details>
 
+<details>
+  <summary>
+    <b>Vite</b>
+  </summary>
+
+To use Eta templates in your Vite project: [@rinoshiyo/vite-plugin-eta](https://github.com/rinoshiyo/vite-plugin-eta)
+
+</details>
+
 <br />
 
 ## Projects using `eta`
@@ -171,4 +182,4 @@ Made with ❤️ by [bgub](https://github.com/bgub) and [many wonderful contribu
 ## Credits
 
 - Async support, file handling, and error formatting were based on code from [EJS](https://github.com/mde/ejs), which is licensed under the Apache-2.0 license. Code was modified and refactored to some extent.
-- Syntax and some parts of compilahttps://jsr.io/@bgub/etation are heavily based off EJS, Nunjucks, and doT.
+- Syntax and some parts of compilation are heavily based off EJS, Nunjucks, and doT.

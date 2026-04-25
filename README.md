@@ -27,7 +27,7 @@
 
 ## Summary
 
-Eta is a lightweight and blazing fast embedded JS templating engine that works inside Node, Deno, and the browser. It's written in TypeScript and emphasizes great performance, configurability, and small bundle size.
+Eta is a lightweight and blazing fast embedded JS templating engine that works inside Node, Deno, and the browser. It's written in TypeScript and emphasizes great performance, configurability, and small bundle size. Created by [bgub (Ben Gubler)](https://github.com/bgub).
 
 > 🎯 **Built with [ts-base](https://github.com/bgub/ts-base)** — A TypeScript library starter template featuring Biome, Vitest, tsdown, and automated releases. Check out ts-base for a modern TypeScript project setup!
 
@@ -39,9 +39,9 @@ Eta is a lightweight and blazing fast embedded JS templating engine that works i
 - ✨ Deno support (+ Node and browser)
 - 🚀 Super Fast
 - 🔧 Configurable
-  - Plugins, custom delimiters, caching
+  - Plugins, custom delimiters, custom tags, caching
 - 🔨 Powerful
-  - Precompilation, partials, async, blocks
+  - Precompilation, partials, async, blocks, capture
   - **Layout support**!
 - 🔥 Reliable
   - Better quotes/comments support
@@ -177,7 +177,7 @@ To use Eta templates in your Vite project: [@rinoshiyo/vite-plugin-eta](https://
 
 ## Contributors
 
-Made with ❤️ by [bgub](https://github.com/bgub) and [many wonderful contributors](https://github.com/bgub/eta/graphs/contributors). Contributions of any kind are welcome!
+Made with ❤️ by [bgub (Ben Gubler)](https://github.com/bgub) and [many wonderful contributors](https://github.com/bgub/eta/graphs/contributors). Contributions of any kind are welcome!
 
 ## Credits
 

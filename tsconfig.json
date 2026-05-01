@@ -12,11 +12,16 @@
     "declaration": true,
     "declarationMap": true,
     "allowImportingTsExtensions": true,
-    "emitDeclarationOnly": true,
+    "emitDeclarationOnly": false,
     "esModuleInterop": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+
+    "rootDir": "src",
+    "outDir": "dist",
+    "typeRoots": ["../../../ts-defs/node_modules/@types"],
+    "rewriteRelativeImportExtensions": true
   },
   "include": ["src"]
 }

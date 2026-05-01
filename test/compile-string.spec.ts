@@ -17,7 +17,7 @@ describe("Compile to String test", () => {
 let include = (__eta_t, __eta_d) => this.render(__eta_t, {...it, ...(__eta_d ?? {})}, options);
 let includeAsync = (__eta_t, __eta_d) => this.renderAsync(__eta_t, {...it, ...(__eta_d ?? {})}, options);
 
-let __eta = {res: "", e: this.config.escapeFunction, f: this.config.filterFunction};
+let __eta = {res: "", e: this.config.escapeFunction, f: this.config.filterFunction, blocks: {}};
 
 function layout(path, data) {
   __eta.layout = path;
@@ -25,12 +25,16 @@ function layout(path, data) {
 }
 
 function output(s){__eta.res+=s;}
+function capture(fn){const s=__eta.res;__eta.res='';try{fn();return __eta.res}finally{__eta.res=s;}}
+async function captureAsync(fn){const s=__eta.res;__eta.res='';try{await fn();return __eta.res}finally{__eta.res=s;}}
+function block(name,fn){if(__eta.layout){if(fn){__eta.blocks[name]=capture(fn);}return '';}const b=it.__blocks||{};if(name in b){return b[name];}return fn?capture(fn):'';}
+async function blockAsync(name,fn){if(__eta.layout){if(fn){__eta.blocks[name]=await captureAsync(fn);}return '';}const b=it.__blocks||{};if(name in b){return b[name];}return fn?await captureAsync(fn):'';}
 
 __eta.res+='hi ';
 __eta.res+=__eta.e(it.name);
 
 if (__eta.layout) {
-  __eta.res = include (__eta.layout, {...it, body: __eta.res, ...__eta.layoutData});
+  __eta.res = include (__eta.layout, {...it, body: __eta.res, ...__eta.layoutData, __blocks: __eta.blocks});
 }
 
 return __eta.res;
@@ -43,7 +47,7 @@ return __eta.res;
 let include = (__eta_t, __eta_d) => this.render(__eta_t, {...it, ...(__eta_d ?? {})}, options);
 let includeAsync = (__eta_t, __eta_d) => this.renderAsync(__eta_t, {...it, ...(__eta_d ?? {})}, options);
 
-let __eta = {res: "", e: this.config.escapeFunction, f: this.config.filterFunction};
+let __eta = {res: "", e: this.config.escapeFunction, f: this.config.filterFunction, blocks: {}};
 
 function layout(path, data) {
   __eta.layout = path;
@@ -51,12 +55,16 @@ function layout(path, data) {
 }
 
 function output(s){__eta.res+=s;}
+function capture(fn){const s=__eta.res;__eta.res='';try{fn();return __eta.res}finally{__eta.res=s;}}
+async function captureAsync(fn){const s=__eta.res;__eta.res='';try{await fn();return __eta.res}finally{__eta.res=s;}}
+function block(name,fn){if(__eta.layout){if(fn){__eta.blocks[name]=capture(fn);}return '';}const b=it.__blocks||{};if(name in b){return b[name];}return fn?capture(fn):'';}
+async function blockAsync(name,fn){if(__eta.layout){if(fn){__eta.blocks[name]=await captureAsync(fn);}return '';}const b=it.__blocks||{};if(name in b){return b[name];}return fn?await captureAsync(fn):'';}
 
 __eta.res+='hi ';
 __eta.res+=it.name;
 
 if (__eta.layout) {
-  __eta.res = include (__eta.layout, {...it, body: __eta.res, ...__eta.layoutData});
+  __eta.res = include (__eta.layout, {...it, body: __eta.res, ...__eta.layoutData, __blocks: __eta.blocks});
 }
 
 return __eta.res;
@@ -71,7 +79,7 @@ return __eta.res;
 let include = (__eta_t, __eta_d) => this.render(__eta_t, {...it, ...(__eta_d ?? {})}, options);
 let includeAsync = (__eta_t, __eta_d) => this.renderAsync(__eta_t, {...it, ...(__eta_d ?? {})}, options);
 
-let __eta = {res: "", e: this.config.escapeFunction, f: this.config.filterFunction};
+let __eta = {res: "", e: this.config.escapeFunction, f: this.config.filterFunction, blocks: {}};
 
 function layout(path, data) {
   __eta.layout = path;
@@ -79,13 +87,17 @@ function layout(path, data) {
 }
 
 function output(s){__eta.res+=s;}
+function capture(fn){const s=__eta.res;__eta.res='';try{fn();return __eta.res}finally{__eta.res=s;}}
+async function captureAsync(fn){const s=__eta.res;__eta.res='';try{await fn();return __eta.res}finally{__eta.res=s;}}
+function block(name,fn){if(__eta.layout){if(fn){__eta.blocks[name]=capture(fn);}return '';}const b=it.__blocks||{};if(name in b){return b[name];}return fn?capture(fn):'';}
+async function blockAsync(name,fn){if(__eta.layout){if(fn){__eta.blocks[name]=await captureAsync(fn);}return '';}const b=it.__blocks||{};if(name in b){return b[name];}return fn?await captureAsync(fn):'';}
 
 __eta.res+='hi';
 __eta.res+=__eta.e(it.firstname);
 __eta.res+=__eta.e(it.lastname);
 
 if (__eta.layout) {
-  __eta.res = include (__eta.layout, {...it, body: __eta.res, ...__eta.layoutData});
+  __eta.res = include (__eta.layout, {...it, body: __eta.res, ...__eta.layoutData, __blocks: __eta.blocks});
 }
 
 return __eta.res;
@@ -98,7 +110,7 @@ return __eta.res;
 let include = (__eta_t, __eta_d) => this.render(__eta_t, {...it, ...(__eta_d ?? {})}, options);
 let includeAsync = (__eta_t, __eta_d) => this.renderAsync(__eta_t, {...it, ...(__eta_d ?? {})}, options);
 
-let __eta = {res: "", e: this.config.escapeFunction, f: this.config.filterFunction};
+let __eta = {res: "", e: this.config.escapeFunction, f: this.config.filterFunction, blocks: {}};
 
 function layout(path, data) {
   __eta.layout = path;
@@ -106,6 +118,10 @@ function layout(path, data) {
 }
 
 function output(s){__eta.res+=s;}
+function capture(fn){const s=__eta.res;__eta.res='';try{fn();return __eta.res}finally{__eta.res=s;}}
+async function captureAsync(fn){const s=__eta.res;__eta.res='';try{await fn();return __eta.res}finally{__eta.res=s;}}
+function block(name,fn){if(__eta.layout){if(fn){__eta.blocks[name]=capture(fn);}return '';}const b=it.__blocks||{};if(name in b){return b[name];}return fn?capture(fn):'';}
+async function blockAsync(name,fn){if(__eta.layout){if(fn){__eta.blocks[name]=await captureAsync(fn);}return '';}const b=it.__blocks||{};if(name in b){return b[name];}return fn?await captureAsync(fn):'';}
 
 __eta.res+='Hi\\n';
 console.log("Hope you like Eta!")
@@ -132,7 +148,7 @@ __eta.res+='\\nThis is a partial: ';
 __eta.res+=include("mypartial");
 
 if (__eta.layout) {
-  __eta.res = include (__eta.layout, {...it, body: __eta.res, ...__eta.layoutData});
+  __eta.res = include (__eta.layout, {...it, body: __eta.res, ...__eta.layoutData, __blocks: __eta.blocks});
 }
 
 return __eta.res;

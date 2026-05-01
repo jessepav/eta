@@ -363,3 +363,285 @@ describe("forEach loops in included templates", () => {
     expect(result).toContain("<span>d</span>");
   });
 });
+
+describe("block", () => {
+  const eta = new Eta();
+
+  it("child overrides layout default", () => {
+    eta.loadTemplate(
+      "@block-layout",
+      `<head><%~ block('styles', () => { %><link href="default.css"><% }) %></head><%~ it.body %>`,
+    );
+
+    const res = eta.renderString(
+      `<% layout("@block-layout") %><p>Body</p><% block('styles', () => { %><link href="page.css"><% }) %>`,
+      {},
+    );
+
+    expect(res).toEqual('<head><link href="page.css"></head><p>Body</p>');
+  });
+
+  it("block with default content when no override", () => {
+    eta.loadTemplate(
+      "@block-default",
+      `<head><%~ block('styles', () => { %><link href="default.css"><% }) %></head><%~ it.body %>`,
+    );
+
+    const res = eta.renderString(
+      `<% layout("@block-default") %><p>Body</p>`,
+      {},
+    );
+
+    expect(res).toEqual('<head><link href="default.css"></head><p>Body</p>');
+  });
+
+  it("empty block with no default and no override", () => {
+    eta.loadTemplate("@block-empty", `[<%~ block('sidebar') %>]<%~ it.body %>`);
+
+    const res = eta.renderString(`<% layout("@block-empty") %>main`, {});
+
+    expect(res).toEqual("[]main");
+  });
+
+  it("multiple blocks in one layout", () => {
+    eta.loadTemplate(
+      "@block-multi",
+      `<head><%~ block('styles') %></head><footer><%~ block('scripts') %></footer><%~ it.body %>`,
+    );
+
+    const res = eta.renderString(
+      `<% layout("@block-multi") %>body<% block('styles', () => { %>S<% }) %><% block('scripts', () => { %>J<% }) %>`,
+      {},
+    );
+
+    expect(res).toEqual("<head>S</head><footer>J</footer>body");
+  });
+
+  it("block accessing outer scope data", () => {
+    eta.loadTemplate("@block-data", `<%~ block('title') %>|<%~ it.body %>`);
+
+    const res = eta.renderString(
+      `<% layout("@block-data") %>body<% block('title', () => { %><%= it.name %><% }) %>`,
+      { name: "Ada" },
+    );
+
+    expect(res).toEqual("Ada|body");
+  });
+
+  it("block doesn't leak into it.body", () => {
+    eta.loadTemplate(
+      "@block-noleak",
+      `[<%~ block('extra') %>][<%~ it.body %>]`,
+    );
+
+    const res = eta.renderString(
+      `<% layout("@block-noleak") %>body<% block('extra', () => { %>X<% }) %>`,
+      {},
+    );
+
+    expect(res).toEqual("[X][body]");
+  });
+
+  it("blockAsync with async content", async () => {
+    eta.loadTemplate(
+      "@block-async-layout",
+      `<%~ await blockAsync('content') %>|<%~ it.body %>`,
+      { async: true },
+    );
+
+    const res = await eta.renderStringAsync(
+      `<% layout("@block-async-layout") %>body<% await blockAsync('content', async () => { %><%= await it.getData() %><% }) %>`,
+      { getData: () => Promise.resolve("async-val") },
+    );
+
+    expect(res).toEqual("async-val|body");
+  });
+});
+
+describe("customTags", () => {
+  it("basic custom tag renders output", () => {
+    const eta = new Eta({
+      customTags: {
+        "*": (content, data) =>
+          (data as Record<string, string>)[content.trim()],
+      },
+    });
+
+    const res = eta.renderString("Hello <%* name %>!", { name: "World" });
+    expect(res).toEqual("Hello World!");
+  });
+
+  it("comment tag that outputs nothing", () => {
+    const eta = new Eta({
+      customTags: { "#": () => "" },
+    });
+
+    const res = eta.renderString("A<%# this is a comment %>B", {});
+    expect(res).toEqual("AB");
+  });
+
+  it("multiple custom tags in one template", () => {
+    const translations: Record<string, Record<string, string>> = {
+      en: { greeting: "Hello" },
+    };
+
+    const eta = new Eta({
+      customTags: {
+        "#": () => "",
+        "*": (key, data) =>
+          translations[(data as { lang: string }).lang][key.trim()],
+      },
+    });
+
+    const res = eta.renderString("<%# comment %><p><%* greeting %></p>", {
+      lang: "en",
+    });
+    expect(res).toEqual("<p>Hello</p>");
+  });
+
+  it("throws on conflicting custom tag prefix", () => {
+    expect(() => new Eta({ customTags: { "=": () => "" } })).toThrow(
+      /conflicts with a built-in prefix/,
+    );
+    expect(() => new Eta({ customTags: { "-": () => "" } })).toThrow(
+      /conflicts with a built-in prefix/,
+    );
+  });
+
+  it("works alongside built-in tags", () => {
+    const eta = new Eta({
+      customTags: { "*": (content) => content.trim().toUpperCase() },
+    });
+
+    const res = eta.renderString("<%= it.a %>|<%* hello %>|<%~ it.b %>", {
+      a: "A",
+      b: "<B>",
+    });
+    expect(res).toEqual("A|HELLO|<B>");
+  });
+});
+
+describe("capture", () => {
+  const eta = new Eta();
+
+  it("captures inline HTML and passes it to an included template", () => {
+    eta.loadTemplate("@wrapper", `<div id="wrapper"><%~ it.content %></div>`);
+
+    const res = eta.renderString(
+      `<%~ include("@wrapper", {content: capture(() => { %><h1>Hello</h1><% })}) %>`,
+      {},
+    );
+
+    expect(res).toEqual('<div id="wrapper"><h1>Hello</h1></div>');
+  });
+
+  it("captures content that uses data from the outer scope", () => {
+    eta.loadTemplate("@card", `<div class="card"><%~ it.body %></div>`);
+
+    const res = eta.renderString(
+      `<%~ include("@card", {body: capture(() => { %><p><%= it.name %></p><% })}) %>`,
+      { name: "Ada" },
+    );
+
+    expect(res).toEqual('<div class="card"><p>Ada</p></div>');
+  });
+
+  it("does not pollute the outer template's output", () => {
+    eta.loadTemplate("@slot", `[<%~ it.slot %>]`);
+
+    const res = eta.renderString(
+      `before|<%~ include("@slot", {slot: capture(() => { %>inner<% })}) %>|after`,
+      {},
+    );
+
+    expect(res).toEqual("before|[inner]|after");
+  });
+
+  it("works with nested captures", () => {
+    eta.loadTemplate("@outer", `<outer><%~ it.content %></outer>`);
+    eta.loadTemplate("@inner", `<inner><%~ it.content %></inner>`);
+
+    const res = eta.renderString(
+      `<%~ include("@outer", {content: capture(() => { %><%~ include("@inner", {content: capture(() => { %>deep<% })}) %><% })}) %>`,
+      {},
+    );
+
+    expect(res).toEqual("<outer><inner>deep</inner></outer>");
+  });
+
+  it("works with loops inside capture", () => {
+    eta.loadTemplate("@list", `<ul><%~ it.items %></ul>`);
+
+    const res = eta.renderString(
+      `<%~ include("@list", {items: capture(() => { %><% ['a','b','c'].forEach(x => { %><li><%= x %></li><% }) %><% })}) %>`,
+      {},
+    );
+
+    expect(res).toEqual("<ul><li>a</li><li>b</li><li>c</li></ul>");
+  });
+
+  it("works with async rendering", async () => {
+    eta.loadTemplate("@async-wrapper", `<div><%~ it.content %></div>`);
+
+    const res = await eta.renderStringAsync(
+      `<%~ include("@async-wrapper", {content: capture(() => { %><p>async content</p><% })}) %>`,
+      {},
+    );
+
+    expect(res).toEqual("<div><p>async content</p></div>");
+  });
+
+  it("capture returns a string that can be stored in a variable", () => {
+    const res = eta.renderString(
+      `<% const heading = capture(() => { %><h1>Title</h1><% }) %>The heading is: <%~ heading %>`,
+      {},
+    );
+
+    expect(res).toEqual("The heading is: <h1>Title</h1>");
+  });
+
+  it("restores output buffer when capture callback throws", () => {
+    expect(() => {
+      eta.renderString(
+        `before<% capture(() => { throw new Error("fail") }) %>after`,
+        {},
+      );
+    }).toThrow("fail");
+
+    // Verify the Eta instance still works correctly after the error
+    const res = eta.renderString("still works: <%= it.x %>", { x: "yes" });
+    expect(res).toEqual("still works: yes");
+  });
+
+  it("captureAsync works with async content", async () => {
+    eta.loadTemplate("@async-slot", `<section><%~ it.content %></section>`);
+
+    const res = await eta.renderStringAsync(
+      `<%~ include("@async-slot", {content: await captureAsync(async () => { %><p><%= await it.getData() %></p><% })}) %>`,
+      { getData: () => Promise.resolve("async value") },
+    );
+
+    expect(res).toEqual("<section><p>async value</p></section>");
+  });
+
+  it("captureAsync does not pollute outer output", async () => {
+    const res = await eta.renderStringAsync(
+      `A|<% const x = await captureAsync(async () => { %><%= await it.val() %><% }) %>B|<%~ x %>`,
+      { val: () => Promise.resolve("captured") },
+    );
+
+    expect(res).toEqual("A|B|captured");
+  });
+
+  it("captureAsync restores buffer on async error", async () => {
+    await expect(async () => {
+      await eta.renderStringAsync(
+        `before<% await captureAsync(async () => { throw new Error("async fail") }) %>`,
+        {},
+      );
+    }).rejects.toThrow("async fail");
+
+    const res = eta.renderString("still works", {});
+    expect(res).toEqual("still works");
+  });
+});

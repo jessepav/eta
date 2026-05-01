@@ -23,7 +23,7 @@ export function compileToString(
 let include = (__eta_t, __eta_d) => this.render(__eta_t, {...${config.varName}, ...(__eta_d ?? {})}, options);
 let includeAsync = (__eta_t, __eta_d) => this.renderAsync(__eta_t, {...${config.varName}, ...(__eta_d ?? {})}, options);
 
-let __eta = {res: "", e: this.config.escapeFunction, f: this.config.filterFunction${
+let __eta = {res: "", e: this.config.escapeFunction, f: this.config.filterFunction, blocks: {}${
     config.debug
       ? ', line: 1, templateStr: "' +
         str.replace(/\\|"/g, "\\$&").replace(/\r\n|\n|\r/g, "\\n") +
@@ -39,6 +39,10 @@ function layout(path, data) {
   }
 
 function ${config.outputFunctionName}(s){__eta.res+=s;}
+function capture(fn){const s=__eta.res;__eta.res='';try{fn();return __eta.res}finally{__eta.res=s;}}
+async function captureAsync(fn){const s=__eta.res;__eta.res='';try{await fn();return __eta.res}finally{__eta.res=s;}}
+function block(name,fn){if(__eta.layout){if(fn){__eta.blocks[name]=capture(fn);}return '';}const b=${config.varName}.__blocks||{};if(name in b){return b[name];}return fn?capture(fn):'';}
+async function blockAsync(name,fn){if(__eta.layout){if(fn){__eta.blocks[name]=await captureAsync(fn);}return '';}const b=${config.varName}.__blocks||{};if(name in b){return b[name];}return fn?await captureAsync(fn):'';}
 
 ${compileBody.call(this, buffer)}
 if (__eta.layout) {
@@ -46,7 +50,7 @@ if (__eta.layout) {
     isAsync ? "await includeAsync" : "include"
   } (__eta.layout, {...${
     config.varName
-  }, body: __eta.res, ...__eta.layoutData});
+  }, body: __eta.res, ...__eta.layoutData, __blocks: __eta.blocks});
 }
 ${config.useWith ? "}" : ""}${
   config.debug
@@ -95,7 +99,7 @@ export function compileBody(this: Eta, buff: Array<AstObject>): string {
       // we know string exists
       returnStr += "__eta.res+='" + str + "';\n";
     } else {
-      const type = currentBlock.t; // "r", "e", or "i"
+      const type = currentBlock.t; // "r", "e", "i" or custom tag name
       let content = currentBlock.val || "";
 
       if (config.debug) returnStr += "__eta.line=" + currentBlock.lineNo + "\n";
@@ -123,6 +127,8 @@ export function compileBody(this: Eta, buff: Array<AstObject>): string {
       } else if (type === "e") {
         // execute
         returnStr += content + "\n";
+      } else if (Object.hasOwn(config.customTags, type)) {
+        returnStr += `__eta.res+=this.config.customTags[${JSON.stringify(type)}](${JSON.stringify(content)},${config.varName});\n`;
       }
     }
   }
